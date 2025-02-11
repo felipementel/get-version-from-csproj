@@ -28,6 +28,7 @@ jobs:
         shell: bash
         run: |
           tag=""
+
           versionPrefix=$(sed -n 's/.*<VersionPrefix>\(.*\)<\/VersionPrefix>.*/\1/p' ${{ inputs.csproj }})
           version=$(sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p' ${{ inputs.csproj }})
           versionSuffix=$(sed -n 's/.*<VersionSuffix>\(.*\)<\/VersionSuffix>.*/\1/p' ${{ inputs.csproj }})
@@ -41,10 +42,9 @@ jobs:
 
           if [[ -n "$version" ]]; then
             echo "Version detected: $version"
-            tag="${version}"
+            tag="${tag}${version}"
           else
             echo "Version not detected"
-          fi
           fi
 
           if [[ -n "$versionSuffix" ]]; then
