@@ -38,7 +38,7 @@ on:
 
 jobs:
   get-project-version:
-    uses: felipementel/project-full-version/.github/workflows/get-version.yml@main
+    uses: felipementel/get-version-from-csproj/.github/workflows/get-version-from-csproj.yml@main
     with:
       csproj: "./src/MyProject/MyProject.csproj"
     outputs:
