@@ -1,6 +1,6 @@
 # Get Version from .csproj
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/felipementel/project-full-version/get-version.yml?branch=main)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/felipementel/get-version-from-csproj/tag-manually.yml?branch=main)
 
 Este **reusable workflow** lê um arquivo `.csproj` e extrai a versão do projeto, combinando os valores das tags `<VersionPrefix>`, `<Version>` e `<VersionSuffix>`. O resultado pode ser utilizado em pipelines de CI/CD para versionamento automatizado de builds e releases.
 
