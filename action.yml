@@ -1,0 +1,58 @@
+name: Get version from csproj
+run-name: "${{ github.actor }} - ${{ github.run_id }}"
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      csproj:
+        type: string
+        description: 'Full path of the main .csproj file'
+        required: true
+    outputs:
+      version:
+        description: "Extracted version from csproj"
+        value: ${{ jobs.read-csproj.outputs.version }}
+
+jobs:
+  read-csproj:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.tag }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get-Version from csproj
+        id: get-version
+        shell: bash
+        run: |
+          tag=""
+          versionPrefix=$(sed -n 's/.*<VersionPrefix>\(.*\)<\/VersionPrefix>.*/\1/p' ${{ inputs.csproj }})
+          version=$(sed -n 's/.*<Version>\(.*\)<\/Version>.*/\1/p' ${{ inputs.csproj }})
+          versionSuffix=$(sed -n 's/.*<VersionSuffix>\(.*\)<\/VersionSuffix>.*/\1/p' ${{ inputs.csproj }})
+
+          if [[ -n "$versionPrefix" ]]; then
+            echo "Prefix detected: $versionPrefix"
+            tag="${versionPrefix}"
+          else
+            echo "Prefix not detected"
+          fi
+
+          if [[ -n "$version" ]]; then
+            echo "Version detected: $version"
+            tag="${version}"
+          else
+            echo "Version not detected"
+          fi
+          fi
+
+          if [[ -n "$versionSuffix" ]]; then
+            echo "Suffix detected: $versionSuffix"
+            tag="${tag}-${versionSuffix}"
+          else
+            echo "Suffix not detected"
+          fi
+
+          echo "Final tag: $tag"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
