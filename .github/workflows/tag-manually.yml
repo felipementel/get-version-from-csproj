@@ -1,0 +1,49 @@
+name: Create Tag Manually
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Nome da tag a ser criada (ex: v1.0.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  validate-user:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar se o usuário é autorizado
+        run: |
+          if [[ "${{ github.actor }}" != "felipementel" ]]; then
+            echo "❌ Usuário não autorizado para executar este workflow."
+            exit 1
+          fi
+          echo "✅ Usuário autorizado: ${{ github.actor }}"
+
+  create-tag:
+    needs: validate-user
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Criar e enviar tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="${{ inputs.tag_name }}"
+
+          # Verifica se a tag já existe
+          if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            echo "❌ A tag '$TAG_NAME' já existe. Nenhuma ação necessária."
+            exit 0
+          fi
+
+          # Criar e push da tag
+          git tag "$TAG_NAME"
+          git push origin "$TAG_NAME"
+
+          echo "✅ Tag '$TAG_NAME' criada com sucesso!"
