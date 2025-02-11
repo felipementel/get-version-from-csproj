@@ -61,12 +61,31 @@ jobs:
 
 ## 📌 **Exemplos de Extração de Versão**
 
+
 Dado um `.csproj` com os seguintes valores:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>1.0</VersionPrefix>
+    <VersionPrefix>pre</VersionPrefix>
+    <Version>1.0.3</Version>
+    <VersionSuffix>rc</VersionSuffix>
+  </PropertyGroup>
+</Project>
+```
+
+O workflow retornará:
+
+```
+pre-1.0.3-rc
+```
+
+Dado um `.csproj` com os seguintes valores:
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Version>1.0</Version>
     <VersionSuffix>beta</VersionSuffix>
   </PropertyGroup>
 </Project>
